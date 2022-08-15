@@ -1,0 +1,14 @@
+{
+  "makes": [
+    { "id": "1", "name": "Toyota"},
+    { "id": "2", "name": "Honda" },
+    { "id": "3", "name": "GMC" },
+    { "id": "4", "name": "VW" }
+  ],
+  "models": [
+    { "id": "1", "name": "Corolla", "bodySize": "sedan", "makeId": "1" },
+    { "id": "2", "name": "Rav4", "bodySize": "Small SUV", "makeId": "1" },
+    { "id": "3", "name": "Taos", "bodySize": "Small SUV", "makeId": "4" },
+    { "id": "4", "name": "Acadia", "bodySize": "SUV", "makeId": "3" }
+  ]
+}
