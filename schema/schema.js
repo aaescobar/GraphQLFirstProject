@@ -1,5 +1,4 @@
 const graphql = require('graphql');
-//const _ = require('lodash'); we wont be needing static makes
 const axios = require('axios');
 const {
     GraphQLObjectType,
@@ -11,14 +10,6 @@ const {
 } = graphql;
 
 
-/* "We will be using db.json to no longer need static data"
-    // const makes = [
-    //     { id: 1, name: 'Toyota' },
-    //     { id: 2, name: 'Honda' },
-    //     { id: 3, name: 'GMC' },
-    //     { id: 4, name: 'VW' }
-    // ];
-*/
 
 const MakeType = new GraphQLObjectType({
     name: 'Make',
@@ -45,7 +36,7 @@ const ModelType = new GraphQLObjectType({
     make: {
       type: MakeType,
       resolve(parentValue, args) {
-        return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`)
+        return axios.get(`http://localhost:3000/makes/${parentValue.makeId}`)
           .then(res => res.data);
       }
     }
@@ -56,14 +47,14 @@ const ModelType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    user: {
+    model: {
       type: ModelType,
       args: { id: { type: GraphQLString } },
         resolve(parentValue, args) { //return a piece of function from our data
             /*no longer need this statement
               //return _.find(users, { id: args.id });
             */
-            return axios.get(`http://localhost:3000/makes/${args.id}`)
+            return axios.get(`http://localhost:3000/models/${args.id}`)
               .then(resp => resp.data)//make request take response and return data
         }
     },
@@ -72,7 +63,7 @@ const RootQuery = new GraphQLObjectType({
       type: MakeType,
       args: { id: { type: GraphQLString }},
       resolve(parentValue, args) {
-        return axios.get(`http://localhost:3000/companies/${args.id}`)
+        return axios.get(`http://localhost:3000/makes/${args.id}`)
           .then(resp => resp.data);
       }
     }
@@ -86,7 +77,7 @@ const mutation = new GraphQLObjectType({
       type: ModelType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
-        bodySize: { type: GraphQLString },
+        bodySize: { type: GraphQLString},
         makeId: { type: GraphQLString }
       },
       resolve(parentValue, { name, bodySize, makeId }){
