@@ -66,10 +66,50 @@ const RootQuery = new GraphQLObjectType({
             return axios.get(`http://localhost:3000/makes/${args.id}`)
               .then(resp => resp.data)//make request take response and return data
         }
+    },
+
+    make: {
+      type: MakeType,
+      args: { id: { type: GraphQLString }},
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${args.id}`)
+          .then(resp => resp.data);
+      }
+    }
+  }
+});
+
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addModel: {
+      type: ModelType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        bodySize: { type: GraphQLString },
+        makeId: { type: GraphQLString }
+      },
+      resolve(parentValue, { name, bodySize, makeId }){
+        return axios.post(`http://localhost:3000/models`, {name, bodySize, makeId })
+          .then(res => res.data);
+      }
+
+    },
+
+    deleteModel: {
+      type: ModelType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parentValue, { id }) {
+        return axios.delete(`http://localhost:3000/models/${id}`)
+          .then(res => res.data);
+      }
     }
   }
 });
 
 module.exports = new GraphQLSchema({
+  mutation,
   query: RootQuery
 });
